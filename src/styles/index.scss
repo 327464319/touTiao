@@ -1,0 +1,27 @@
+@import '../styles/font/iconfont.css';
+body,
+html {
+  background-color: #f5f7f9;
+}
+.van-nav-bar {
+  background: #3296fa;
+  font-size: 31px;
+  height: 100px;
+
+  .van-nav-bar__title {
+    color: #fff;
+  }
+}
+.iconfont {
+  font-size: 32px;
+}
+header {
+  height: 401px;
+  background: url(../assets/banner.png);
+}
+.van-nav-bar__text {
+  color: #ffffff !important;
+}
+.van-icon-arrow-left::before {
+  color: #fff;
+}
