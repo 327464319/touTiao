@@ -2,12 +2,7 @@
   <div class="my-container">
     <header>
       <div class="user-info-wrap" v-if="!token">
-        <img
-          src="../../assets/mobile.png"
-          alt=""
-          width="132px"
-          height="132px"
-        />
+        <img src="../../assets/mobile.png" alt="" class="myIcon" />
         <span @click="logReg">登录 / 注册</span>
       </div>
 
@@ -109,6 +104,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.myIcon {
+  width: 132px;
+  height: 132px;
+}
 .user-info {
   display: flex;
   justify-content: space-around;

@@ -63,7 +63,7 @@
             loader: 'C:\\Users\\Administrator\\Desktop\\tou-tiao\\node_modules\\cache-loader\\dist\\cjs.js',
             options: {
               cacheDirectory: 'C:\\Users\\Administrator\\Desktop\\tou-tiao\\node_modules\\.cache\\vue-loader',
-              cacheIdentifier: '17304373'
+              cacheIdentifier: '6f5a732d'
             }
           },
           /* config.module.rule('vue').use('vue-loader') */
@@ -74,7 +74,7 @@
                 whitespace: 'condense'
               },
               cacheDirectory: 'C:\\Users\\Administrator\\Desktop\\tou-tiao\\node_modules\\.cache\\vue-loader',
-              cacheIdentifier: '17304373'
+              cacheIdentifier: '6f5a732d'
             }
           }
         ]
@@ -1456,7 +1456,7 @@
             loader: 'C:\\Users\\Administrator\\Desktop\\tou-tiao\\node_modules\\cache-loader\\dist\\cjs.js',
             options: {
               cacheDirectory: 'C:\\Users\\Administrator\\Desktop\\tou-tiao\\node_modules\\.cache\\babel-loader',
-              cacheIdentifier: '64f74df6'
+              cacheIdentifier: '6cca2a4b'
             }
           },
           /* config.module.rule('js').use('babel-loader') */
@@ -1484,7 +1484,7 @@
                 '.vue'
               ],
               cache: true,
-              cacheIdentifier: '64855e1e',
+              cacheIdentifier: '47feced4',
               emitWarning: false,
               emitError: false,
               eslintPath: 'C:\\Users\\Administrator\\Desktop\\tou-tiao\\node_modules\\eslint',

@@ -1,7 +1,9 @@
 <template>
   <div>
     <van-cell-group>
-      <van-cell>
+      <van-cell
+        :to="{ name: 'articleRouter', params: { articleId: article.art_id } }"
+      >
         <div slot="title" class="title van-multi-ellipsis--l2">
           {{ article.title }}
         </div>
@@ -30,8 +32,7 @@
           <van-image
             fit="cover"
             :src="article.cover.images[0]"
-            height="146px"
-            width="232px"
+            class="oneImg"
           />
         </div>
       </van-cell>
@@ -55,6 +56,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.oneImg {
+  height: 146px;
+  width: 232px;
+}
 ::v-deep .van-cell__value {
   top: 23px;
   left: 23px;

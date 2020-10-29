@@ -11,6 +11,8 @@ Vue.use(VueRouter)
 const routes = [
 
   { path: '/login', component: Login },
+  { path: '/search', component: () => import('../components/search/search.vue') },
+  { name: 'articleRouter', path: '/article/:articleId', component: () => import('../components/article/article.vue'), props: true },
 
   {
     path: '/',

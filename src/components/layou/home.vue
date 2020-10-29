@@ -1,7 +1,7 @@
 <template>
   <div class="home-container">
     <van-nav-bar fixed />
-    <div class="search">
+    <div class="search" @click="search">
       <div>
         <i class="iconfont iconsousuo"></i>
         <span>搜索</span>
@@ -99,6 +99,10 @@ export default {
     }
   },
   methods: {
+    // 跳转search
+    search () {
+      this.$router.push('/search')
+    },
     setMyChannel (id, index) {
       if (this.isEdit) {
         // 不能删除不允许删除的项
@@ -298,8 +302,13 @@ export default {
   padding-top: 188px;
 }
 ::v-deep .content {
-  padding: 109px 24px 0 24px;
-
+  padding-top: 109px;
+  .title {
+    margin-left: 24px;
+  }
+  .van-button {
+    margin-right: 24px;
+  }
   .wode {
     margin-bottom: 74px;
     .van-grid {
