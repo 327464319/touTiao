@@ -1,8 +1,20 @@
 import Axios from 'axios'
+import JSONbig from 'json-bigint'
 
 const REQUEST_KEY = Symbol('request')
 if (!global[REQUEST_KEY]) {
-  global[REQUEST_KEY] = Axios.create({ baseURL: 'http://ttapi.research.itcast.cn/' })
+  global[REQUEST_KEY] = Axios.create({
+    baseURL: 'http://ttapi.research.itcast.cn/',
+    transformResponse: [function (data) {
+    // Do whatever you want to transform the data
+
+      try {
+        return JSONbig.parse(data)
+      } catch (e) {
+        return data
+      }
+    }]
+  })
 }
 // global[REQUEST_KEY].interceptors.request.use(config => {
 //   if (window.localStorage.getItem('token_key')) {

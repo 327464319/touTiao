@@ -1,20 +1,25 @@
 <template>
   <div class="article-container">
     <!-- 导航栏 -->
-    <van-nav-bar class="page-nav-bar" left-arrow title="黑马头条"></van-nav-bar>
+    <van-nav-bar
+      class="page-nav-bar"
+      left-arrow
+      title="头条新闻"
+      @click-left="back"
+    ></van-nav-bar>
     <!-- /导航栏 -->
 
     <div class="main-wrap">
       <!-- 加载中 -->
-      <div class="loading-wrap">
+      <div class="loading-wrap" v-if="loading">
         <van-loading color="#3296fa" vertical>加载中</van-loading>
       </div>
       <!-- /加载中 -->
 
       <!-- 加载完成-文章详情 -->
-      <div class="article-detail">
+      <div class="article-detail" v-else-if="articleDatil.art_id">
         <!-- 文章标题 -->
-        <h1 class="article-title">这是文章标题</h1>
+        <h1 class="article-title">{{ articleDatil.title }}</h1>
         <!-- /文章标题 -->
 
         <!-- 用户信息 -->
@@ -24,85 +29,155 @@
             slot="icon"
             round
             fit="cover"
-            src="https://img.yzcdn.cn/vant/cat.jpeg"
+            :src="articleDatil.aut_photo"
           />
-          <div slot="title" class="user-name">黑马头条号</div>
-          <div slot="label" class="publish-date">14小时前</div>
-          <van-button
+          <div slot="title" class="user-name">{{ articleDatil.aut_name }}</div>
+          <div slot="label" class="publish-date">
+            {{ articleDatil.pubdate | format }}
+          </div>
+          <!-- 这里是自己定义的关注按钮 -->
+          <attention-button
             class="follow-btn"
-            type="info"
-            color="#3296fa"
-            round
-            size="small"
-            icon="plus"
-            >关注</van-button
-          >
-          <!-- <van-button
-            class="follow-btn"
-            round
-            size="small"
-          >已关注</van-button> -->
+            :is_followed="articleDatil.is_followed"
+            :followed_id="articleDatil.aut_id"
+            @setIsFollowed="articleDatil.is_followed = $event"
+          ></attention-button>
         </van-cell>
         <!-- /用户信息 -->
 
         <!-- 文章内容 -->
-        <div class="article-content">这是文章内容</div>
+        <div
+          ref="contentRef"
+          class="article-content markdown-body"
+          v-html="articleDatil.content"
+        ></div>
         <van-divider>正文结束</van-divider>
+        <!-- 底部区域 -->
+        <div class="article-bottom">
+          <van-button class="comment-btn" type="default" round size="small"
+            >写评论</van-button
+          >
+          <van-icon name="comment-o" info="123" color="#777" />
+          <my-collect
+            v-model="articleDatil.is_collected"
+            :followed_id="articleDatil.art_id"
+          ></my-collect>
+          <my-liking
+            v-model="articleDatil.attitude"
+            :followed_id="articleDatil.art_id"
+          ></my-liking>
+          <van-icon name="share" color="#777777" @click="share"></van-icon>
+        </div>
+        <!-- /底部区域 -->
       </div>
       <!-- /加载完成-文章详情 -->
 
       <!-- 加载失败：404 -->
-      <div class="error-wrap">
+      <div class="error-wrap" v-else-if="status === 404">
         <van-icon name="failure" />
         <p class="text">该资源不存在或已删除！</p>
       </div>
       <!-- /加载失败：404 -->
 
       <!-- 加载失败：其它未知错误（例如网络原因或服务端异常） -->
-      <div class="error-wrap">
+      <div class="error-wrap" v-else>
         <van-icon name="failure" />
         <p class="text">内容加载失败！</p>
-        <van-button class="retry-btn">点击重试</van-button>
+        <van-button class="retry-btn" @click="getDatil">点击重试</van-button>
       </div>
       <!-- /加载失败：其它未知错误（例如网络原因或服务端异常） -->
     </div>
-
-    <!-- 底部区域 -->
-    <div class="article-bottom">
-      <van-button class="comment-btn" type="default" round size="small"
-        >写评论</van-button
-      >
-      <van-icon name="comment-o" info="123" color="#777" />
-      <van-icon color="#777" name="star-o" />
-      <van-icon color="#777" name="good-job-o" />
-      <van-icon name="share" color="#777777"></van-icon>
-    </div>
-    <!-- /底部区域 -->
   </div>
 </template>
 
 <script>
+import { getArticleDatil } from '@/api/article.js'
+import { ImagePreview } from 'vant'
+import attention from '../mycomponent/attention'
+import collect from '../mycomponent/collect'
+import liking from '../mycomponent/liking'
+
 export default {
 
-  components: {},
+  components: {
+    'attention-button': attention,
+    'my-collect': collect,
+    'my-liking': liking
+
+  },
   props: {
     articleId: {
-      type: [Number, String],
+      // 加载log显示
+      loading: false,
+      type: [Number, String, Object],
       required: true
     }
   },
   data () {
-    return {}
+    return {
+      // 错误模块显示
+      status: 0,
+      // 加载log显示
+      loading: false,
+      articleDatil: []
+    }
   },
   computed: {},
   watch: {},
-  created () {},
-  mounted () {},
-  methods: {}
+  created () {
+    this.getDatil()
+  },
+  mounted () {
+
+  },
+  methods: {
+    share () {
+      this.$toast.fail('该功能尚未开发!')
+    },
+    back () {
+      this.$router.push('/home')
+    },
+    async  getDatil () {
+      this.loading = true
+      try {
+        // if (Math.random() > 0.5) {
+        //   JSON.parse('11111a')
+        // }
+        const { data: res } = await getArticleDatil(this.articleId.toString())
+        console.log(res)
+        const images = []
+
+        setTimeout(() => {
+          const imgs = this.$refs.contentRef.querySelectorAll('img')
+
+          imgs.forEach((v, i) => {
+            images.push(v.src)
+            v.addEventListener('click', function () {
+              ImagePreview({
+                images,
+                startPosition: i,
+                closeable: true
+              })
+            })
+          })
+        }, 0)
+
+        this.articleDatil = res.data
+      } catch (e) {
+        console.log(e)
+        if (e.response?.status === 404) {
+          this.status = 404
+        }
+      } finally {
+        this.loading = false
+      }
+    }
+  }
 }
 </script>
 
 <style scoped lang="scss">
+@import "./github-markdown.css";
 .article-container {
   .main-wrap {
     position: fixed;

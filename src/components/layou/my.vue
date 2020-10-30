@@ -141,12 +141,14 @@ export default {
   }
 }
 .info-left {
+  flex: 1;
   width: 344px;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
   .leftimg {
     margin-left: 32px;
+    margin-right: 32px;
     .van-image {
       border: 1px solid #ffffff;
     }

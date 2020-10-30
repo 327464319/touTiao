@@ -103,6 +103,7 @@ export default {
       })
       try {
         const { data: res } = await login(this.user)
+        console.log(res)
         this.$store.commit('setToken', res.data)
 
         this.$toast.success('登录成功！')

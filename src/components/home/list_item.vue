@@ -41,7 +41,7 @@
 </template>
 
 <script>
-import '../../utils/dayjs'
+
 export default {
   props: {
     article: {

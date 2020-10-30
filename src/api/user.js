@@ -13,3 +13,12 @@ export const patchMyChannels = (channels) => request({
 
 })
 export const delMyChannel = (id) => request.delete(`/app/v1_0/user/channels/${id}`)
+// 关注
+export const goFollow = (id) => request.post('/app/v1_0/user/followings', { target: id })
+export const cancelFollow = (id) => request.delete(`/app/v1_0/user/followings/${id}`)
+// 收藏
+export const goCollect = (id) => request.post('/app/v1_0/article/collections', { target: id })
+export const cancelCollect = (id) => request.delete(`/app/v1_0/article/collections/${id}`)
+// 点赞
+export const cancelLiking = (target) => request.post('/app/v1_0/article/dislikes', { target })
+export const goLiking = (target) => request.post('/app/v1_0/article/likings', { target })

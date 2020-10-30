@@ -14,7 +14,8 @@
         :error.sync="error"
         error-text="请求失败，点击重新加载"
       >
-        <van-cell v-for="item in list" :key="item.art_id">
+        <van-cell v-for="item in list" :key="item.art_id.toString()">
+          <!-- 子组件 -->
           <list-item :article="item"></list-item>
         </van-cell>
       </van-list>
