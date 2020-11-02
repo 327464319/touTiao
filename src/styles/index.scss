@@ -17,7 +17,8 @@ html {
 }
 header {
   height: 401px;
-  background: url(../assets/banner.png);
+  background: url(../assets/banner.png) no-repeat;
+  background-size: cover;
 }
 .van-nav-bar__text {
   color: #ffffff !important;

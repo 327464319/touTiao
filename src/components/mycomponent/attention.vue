@@ -46,7 +46,9 @@ export default {
           await goFollow(this.followed_id)
           this.$emit('setIsFollowed', !this.is_followed)
         } catch (e) {
-          console.log(e, e.response)
+          if (e.response.status === 401) {
+            this.$toast.fail('请登录后再试试！')
+          } else
           if (e.response.status === 400) { this.$toast.fail('你不能关注自己！') } else { this.$toast.fail('关注失败！') }
         }
       }

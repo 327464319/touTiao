@@ -103,13 +103,13 @@ export default {
       })
       try {
         const { data: res } = await login(this.user)
-        console.log(res)
+
         this.$store.commit('setToken', res.data)
 
         this.$toast.success('登录成功！')
         this.$router.push('/my')
       } catch (err) {
-        if (err.response.status === 400) return this.$toast.fail('账号或验证码出错！')
+        if (err.response?.status === 400) return this.$toast.fail('账号或验证码出错！')
         this.$toast.fail('登录失败！')
       }
     }
@@ -138,7 +138,7 @@ export default {
 .daojishi {
   background: #ededed;
   border: 0;
-  width: 152px;
+
   height: 46px;
   border-radius: 23px;
   font-size: 22px;
@@ -157,5 +157,8 @@ export default {
 }
 .iconfont {
   margin-right: 20px;
+}
+::v-deep .van-button__text {
+  font-size: 22px;
 }
 </style>

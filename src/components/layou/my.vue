@@ -1,9 +1,9 @@
 <template>
   <div class="my-container">
     <header>
-      <div class="user-info-wrap" v-if="!token">
+      <div class="user-info-wrap" v-if="!token" @click="logReg">
         <img src="../../assets/mobile.png" alt="" class="myIcon" />
-        <span @click="logReg">登录 / 注册</span>
+        <span>登录 / 注册</span>
       </div>
 
       <div class="user-info-avatar" v-if="token">
@@ -192,10 +192,6 @@ export default {
   margin-top: 9px;
 }
 .user-info-wrap {
-  width: 132px;
-  height: 132px;
-  background: #ffffff;
-  border: 2px solid #ffffff;
   border-radius: 50%;
   position: absolute;
   left: 311px;
@@ -206,7 +202,9 @@ export default {
   flex-direction: column;
   align-content: center;
   img {
-    margin-bottom: 13px;
+    width: 132px;
+    height: 132px;
+    margin-bottom: 26px;
   }
   span {
     width: 150px;

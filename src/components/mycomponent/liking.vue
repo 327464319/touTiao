@@ -18,9 +18,7 @@ export default {
   },
   props: {
     value: {
-      type: [String, Number],
-      required: true
-
+      type: [String, Number]
     },
     followed_id: {
       type: [String, Number, Object],
@@ -42,7 +40,9 @@ export default {
           this.$emit('input', 1)
         }
       } catch (e) {
-        this.$toast.fail('操作失败！')
+        if (e.response.status === 401) {
+          this.$toast.fail('请登录后再试试！')
+        } else { this.$toast.fail('操作失败！') }
       } finally {
         this.loading = false
       }

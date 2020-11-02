@@ -44,7 +44,9 @@ export default {
           this.$emit('change', !this.iscollect)
         }
       } catch (e) {
-        this.$toast.fail('操作失败！')
+        if (e.response.status === 401) {
+          this.$toast.fail('请登录后再试试！')
+        } else { this.$toast.fail('操作失败！') }
       } finally {
         this.loading = false
       }

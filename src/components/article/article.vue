@@ -52,12 +52,87 @@
           v-html="articleDatil.content"
         ></div>
         <van-divider>正文结束</van-divider>
+        <!-- 评论区 -->
+        <comment-list
+          type="a"
+          :newOneComment="newOneComment"
+          :artId="articleDatil.art_id"
+          @setTotalCount="pinglunInfo = $event"
+        ></comment-list>
         <!-- 底部区域 -->
+        <!-- 评论弹出层 -->
+        <van-popup
+          v-model="isComentPostShow"
+          position="bottom"
+          v-if="isComentPostShow"
+          ><comment-post
+            :artId="articleDatil.art_id"
+            @addOneComment="addOneComment"
+          ></comment-post
+        ></van-popup>
+        <!-- 评论的评论的评论键盘弹出层 -->
+        <van-popup
+          :duration="3"
+          class="commentBycommont"
+          v-model="isComemntByCommentPopShow"
+          position="bottom"
+          v-if="isComemntByCommentPopShow"
+        >
+          <comment-by-comment-post
+            @addOneComment="addOneComment"
+          ></comment-by-comment-post>
+        </van-popup>
+        <!-- 评论的评论键盘弹出层 -->
+        <van-popup
+          v-model="isReplyPostShow"
+          position="bottom"
+          v-if="isReplyPostShow"
+          ><comment-post
+            :artId="comment.com_id"
+            :artIdfromReply="articleId"
+            @addOneComment="addOneComment"
+          ></comment-post
+        ></van-popup>
+        <!-- comment的评论弹出层 -->
+        <van-popup
+          :value="show"
+          position="bottom"
+          :style="{ height: '100%' }"
+          v-if="show"
+        >
+          <van-nav-bar
+            :title="
+              comment.reply_count > 0
+                ? comment.reply_count + '条回复'
+                : '暂无回复'
+            "
+            @click-left="onClickLeft"
+          >
+            <van-icon slot="left" name="cross"></van-icon>
+          </van-nav-bar>
+
+          <div class="scroll">
+            <comment-reply
+              :newOneComment="newOneCommentByRpley"
+            ></comment-reply>
+          </div>
+          <div class="replyFooter">
+            <van-button round size="small" @click="isReplyPostShow = true"
+              >写评论</van-button
+            >
+          </div>
+        </van-popup>
+
         <div class="article-bottom">
-          <van-button class="comment-btn" type="default" round size="small"
+          <van-button
+            class="comment-btn"
+            type="default"
+            round
+            size="small"
+            @click="isComentPostShow = true"
             >写评论</van-button
           >
-          <van-icon name="comment-o" info="123" color="#777" />
+          <van-icon name="comment-o" :info="pinglunInfo" color="#777" />
           <my-collect
             v-model="articleDatil.is_collected"
             :followed_id="articleDatil.art_id"
@@ -96,13 +171,22 @@ import { ImagePreview } from 'vant'
 import attention from '../mycomponent/attention'
 import collect from '../mycomponent/collect'
 import liking from '../mycomponent/liking'
+import CommentList from '../comment/comment-list'
+import CommentPost from '../comment/CommentPost'
+import CommentByCommentPost from '../comment/CommentByCommentPost'
+import { mapState, mapMutations } from 'vuex'
+import CommentReply from '../comment/CommentReply'
 
 export default {
 
   components: {
     'attention-button': attention,
     'my-collect': collect,
-    'my-liking': liking
+    'my-liking': liking,
+    CommentList,
+    CommentPost,
+    CommentReply,
+    CommentByCommentPost
 
   },
   props: {
@@ -115,15 +199,46 @@ export default {
   },
   data () {
     return {
+      newOneComment: {},
+      newOneCommentByRpley: {},
+
+      // attitude: -1,
+      isComentPostShow: false,
+      isReplyPostShow: false,
       // 错误模块显示
       status: 0,
       // 加载log显示
       loading: false,
-      articleDatil: []
+      articleDatil: [],
+      pinglunInfo: 0
     }
   },
-  computed: {},
-  watch: {},
+  computed: {
+    ...mapState('commentModules', ['show', 'comment']),
+    isComemntByCommentPopShow: {
+      get () {
+        return this.$store.state.commentModules.isComemntByCommentPopShow
+      },
+      set (val) {
+        this.$store.commit('commentModules/setcombycomShow', val)
+      }
+
+    }
+  },
+  watch: {
+    // 把articleId注册到vuex
+    articleId: {
+      handler: function (val) {
+        this.setArticleId(val)
+      },
+      immediate: true
+    }
+    // comment: {
+    //   handler: (comment) => {
+    //     console.log('comment', comment)
+    //   }
+    // }
+  },
   created () {
     this.getDatil()
   },
@@ -131,6 +246,28 @@ export default {
 
   },
   methods: {
+    ...mapMutations('commentModules', ['hideReply', 'setArticleId', 'addCommentReply']),
+    // coment弹出层
+    onClickLeft () {
+      this.hideReply()
+    },
+    addOneComment (event) {
+      if (this.isComentPostShow) { // 如果打开的是评论的弹出层
+        this.isComentPostShow = false
+        this.newOneComment = event.new_obj
+        this.pinglunInfo++
+      } else if (this.isReplyPostShow) {
+        // 如果打开的是评论的评论的回复
+        this.isReplyPostShow = false
+        this.newOneCommentByRpley = event.new_obj
+        this.addCommentReply()
+      } else {
+        // 或则评论的评论的评论
+        this.$store.commit('commentModules/setcombycomShow', false)
+        this.newOneCommentByRpley = event.new_obj
+        this.addCommentReply()
+      }
+    },
     share () {
       this.$toast.fail('该功能尚未开发!')
     },
@@ -140,11 +277,11 @@ export default {
     async  getDatil () {
       this.loading = true
       try {
-        // if (Math.random() > 0.5) {
+        // if (Math.random() > 0.1) {
         //   JSON.parse('11111a')
         // }
         const { data: res } = await getArticleDatil(this.articleId.toString())
-        console.log(res)
+        // console.log(res)
         const images = []
 
         setTimeout(() => {
@@ -164,7 +301,6 @@ export default {
 
         this.articleDatil = res.data
       } catch (e) {
-        console.log(e)
         if (e.response?.status === 404) {
           this.status = 404
         }
@@ -178,6 +314,7 @@ export default {
 
 <style scoped lang="scss">
 @import "./github-markdown.css";
+
 .article-container {
   .main-wrap {
     position: fixed;
@@ -266,8 +403,9 @@ export default {
     position: fixed;
     left: 0;
     right: 0;
-    bottom: 0;
+    bottom: 0vh;
     display: flex;
+
     justify-content: space-around;
     align-items: center;
     box-sizing: border-box;
@@ -289,6 +427,40 @@ export default {
         background-color: #e22829;
       }
     }
+  }
+}
+.van-nav-bar {
+  z-index: 0;
+}
+::v-deep .van-popup {
+  .van-nav-bar {
+    background: #fff;
+    .van-nav-bar__title {
+      color: #323233;
+      font-weight: 500;
+    }
+  }
+}
+.scroll {
+  overflow-y: auto;
+  height: 93vh;
+}
+.replyFooter {
+  background: #fff;
+  height: 89px;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: 2;
+  border-top: 1px solid #d8d8d8;
+  .van-button {
+    width: 60%;
+    border: 2px solid #ebedf0;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
   }
 }
 </style>
