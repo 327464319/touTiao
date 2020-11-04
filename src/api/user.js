@@ -22,3 +22,7 @@ export const cancelCollect = (id) => request.delete(`/app/v1_0/article/collectio
 // 点赞
 export const cancelLiking = (target) => request.post('/app/v1_0/article/dislikes', { target })
 export const goLiking = (target) => request.post('/app/v1_0/article/likings', { target })
+// 获取用户个人资料
+export const getUserInfo = () => request.get('/app/v1_0/user/profile')
+export const setUserInfo = userInfo => request.patch('/app/v1_0/user/profile', userInfo)
+export const setUserPhoto = formData => request.patch('/app/v1_0/user/photo', formData)

@@ -1,5 +1,5 @@
 <template>
-  <div class="list-contain">
+  <div class="list-contain" ref="listContainRef">
     <van-pull-refresh
       v-model="refreshing"
       @refresh="onRefresh"
@@ -26,8 +26,10 @@
 <script>
 import { getArticle } from '../../api/article'
 import ListItem from './list_item'
+import { debounce } from 'lodash'
 
 export default {
+  name: 'ArticleList',
   props: {
     aId: {
       required: true,
@@ -47,7 +49,9 @@ export default {
       loading: false,
       finished: false,
       refreshing: false,
-      error: false
+      error: false,
+      // keep-alive后缓存的内容高度
+      scrollTop: 0
     }
   },
   methods: {
@@ -91,14 +95,22 @@ export default {
       // 将 loading 设置为 true，表示处于加载状态
       this.loading = true
       this.getArt('refresh')
+    },
+    handleScroll (e) {
+      this.scrollTop = e.target.scrollTop
     }
-
   },
   created () {
     // this.getArt()
   },
+  mounted () {
+    this.$refs.listContainRef.addEventListener('scroll', debounce(this.handleScroll, 300))
+  },
   components: {
     ListItem
+  },
+  activated () {
+    this.$refs.listContainRef.scrollTop = this.scrollTop
   }
 }
 </script>

@@ -48,7 +48,8 @@ global[REQUEST_KEY].interceptors.response.use(function (response) {
   // Any status codes that falls outside the range of 2xx cause this function to trigger
   // Do something with response error
   if (error.response?.status === 401) {
-    window.localStorage.clear('token_key')
+    window.localStorage.clear()
+    this.$store.state.token = ''
   }
   return Promise.reject(error)
 })

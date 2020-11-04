@@ -1,6 +1,7 @@
 <template>
   <div>
-    <router-view />
+    <keep-alive> <router-view /></keep-alive>
+
     <van-tabbar route>
       <van-tabbar-item to="/home">
         <i class="iconfont iconshouye" slot="icon" />
@@ -23,10 +24,17 @@
 
 <script>
 export default {
+  name: 'MyLayout',
   data () {
     return {
 
     }
+  },
+  created () {
+    // $route是本页面路由信息,$router是Vue上绑定的路由实例
+    // console.log(this.$route)
+    // console.log(this.$router)
+    this.$store.commit('setCache', 'MyLayout')
   }
 }
 </script>

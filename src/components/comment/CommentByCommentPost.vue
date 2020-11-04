@@ -52,6 +52,7 @@ export default {
       // content string 必须 评论内容
       // art_id integer 非必须 文章id，对评论内容发表回复时，需要传递此参数，表明所属文章id。对文章进行评论，不要传此参数。
       try {
+        //  target这是并不是操作的评论的id，而是评论所在评论的id
         const { data: res } = await setComment({
           target: this.comment.com_id,
           content: this.message + '/@' + this.comemntByComment.aut_name + ':' + this.comemntByComment.content,

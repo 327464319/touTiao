@@ -9,6 +9,13 @@ const My = () => import('../components/layou/my.vue')
 Vue.use(VueRouter)
 
 const routes = [
+  {
+    path: '/userProfile',
+    component: () => import('../components/user/UserProfile.vue'),
+    meta: {
+      index: 2
+    }
+  },
 
   { path: '/login', component: Login },
   { path: '/search', component: () => import('../components/search/search.vue') },
@@ -18,8 +25,17 @@ const routes = [
     path: '/',
     component: Index,
     redirect: '/home',
+
     children: [
-      { path: '/my', component: My },
+      {
+        path: '/my',
+        component: My,
+        meta: {
+          index: 1
+        }
+
+      },
+
       { path: '/home', component: Home },
       { path: '/video', component: Video },
       { path: '/pa', component: Pa }

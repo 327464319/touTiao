@@ -178,11 +178,12 @@ export default {
       }
     },
     async getAllChannels () {
-      const { data: res } = await getAllChannels()
-
-      if (res.message !== 'OK') return this.$toast.fail('获取全部列表失败！')
-
-      this.allChannels = res.data.channels
+      try {
+        const { data: res } = await getAllChannels()
+        this.allChannels = res.data.channels
+      } catch (e) {
+        this.$toast.fail('获取全部列表失败！')
+      }
     }
 
   },

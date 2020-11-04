@@ -18,7 +18,7 @@
           <span>{{ user.name }}</span>
         </div>
         <div class="info-right">
-          <van-button type="default" round class="rightBtn"
+          <van-button type="default" round class="rightBtn" to="/userProfile"
             >编辑资料</van-button
           >
         </div>
@@ -72,6 +72,7 @@ export default {
       user: {}
     }
   },
+
   methods: {
     logReg () {
       this.$router.push('/login')

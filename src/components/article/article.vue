@@ -178,7 +178,7 @@ import { mapState, mapMutations } from 'vuex'
 import CommentReply from '../comment/CommentReply'
 
 export default {
-
+  name: 'MyArticle',
   components: {
     'attention-button': attention,
     'my-collect': collect,

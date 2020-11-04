@@ -10,8 +10,13 @@ import '@/utils/dayjs'
 Vue.use(Vant)
 
 Vue.config.productionTip = false
-
+// Vue.prototype.$http = router
 new Vue({
+  data () {
+    return {
+      // direction: 'slide-left'
+    }
+  },
   router,
   store,
   render: h => h(App)

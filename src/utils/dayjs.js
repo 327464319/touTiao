@@ -8,3 +8,6 @@ dayjs.locale('zh-cn') // 全局使用
 vue.filter('format', (date) => {
   return dayjs().from(dayjs(date))
 })
+vue.filter('formDate', (val) => {
+  return dayjs(val).format('YYYY-MM-DD')
+})

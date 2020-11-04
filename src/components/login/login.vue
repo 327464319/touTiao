@@ -107,6 +107,7 @@ export default {
         this.$store.commit('setToken', res.data)
 
         this.$toast.success('登录成功！')
+        this.$store.commit('removeCache', 'MyLayout')
         this.$router.push('/my')
       } catch (err) {
         if (err.response?.status === 400) return this.$toast.fail('账号或验证码出错！')
