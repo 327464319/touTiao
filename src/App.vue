@@ -17,7 +17,7 @@ export default {
     }
   },
   created () {
-    console.log(this.$store.state.cacheArr)
+
     // console.log(this.$root.direction)
     // this.$http.beforeEach((to, from, next) => {
     //   if (to.meta.index < from.meta.index) {

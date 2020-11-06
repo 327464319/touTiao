@@ -75,7 +75,12 @@ export default {
 
   methods: {
     logReg () {
-      this.$router.push('/login')
+      this.$router.push({
+        path: '/login',
+        query: {
+          redirect: '/my'
+        }
+      })
     },
     logout () {
       this.$dialog.confirm({

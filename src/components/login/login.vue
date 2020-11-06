@@ -108,7 +108,8 @@ export default {
 
         this.$toast.success('登录成功！')
         this.$store.commit('removeCache', 'MyLayout')
-        this.$router.push('/my')
+        console.log(this.$route)
+        this.$router.push(this.$route.query.redirect || '/')
       } catch (err) {
         if (err.response?.status === 400) return this.$toast.fail('账号或验证码出错！')
         this.$toast.fail('登录失败！')

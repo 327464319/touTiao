@@ -1,6 +1,7 @@
 import Axios from 'axios'
 import JSONbig from 'json-bigint'
-
+import Store from '@/store/index.js'
+import router from '../router'
 const REQUEST_KEY = Symbol('request')
 if (!global[REQUEST_KEY]) {
   global[REQUEST_KEY] = Axios.create({
@@ -43,13 +44,40 @@ global[REQUEST_KEY].interceptors.response.use(function (response) {
   // Any status code that lie within the range of 2xx cause this function to trigger
   // Do something with response data
   return response
-}, function (error) {
+}, async function (error) {
   // console.log('error', error)
   // Any status codes that falls outside the range of 2xx cause this function to trigger
   // Do something with response error
   if (error.response?.status === 401) {
-    window.localStorage.clear()
-    this.$store.state.token = ''
+    const req = Axios.create()
+    req.interceptors.request.use(function (config) {
+      config.headers.Authorization = 'Bearer ' + Store.state.token.refresh_token
+      return config
+    })
+    try {
+      if (!Store.state.token || !Store.state.token.token) {
+        return router.replace({
+          path: '/login',
+          query: {
+            redirect: router.currentRoute.fullPath
+          }
+        })
+      }
+      const { data: res } = await req.put('http://ttapi.research.itcast.cn/app/v1_0/authorizations')
+
+      const userToken = JSON.parse(window.localStorage.getItem('token_key'))
+      userToken.token = res.data.token
+      window.localStorage.setItem('token_key', JSON.stringify(userToken))
+
+      return global[REQUEST_KEY](error.config)
+    } catch (e) {
+      router.replace({
+        path: '/login',
+        query: {
+          redirect: router.currentRoute.fullPath
+        }
+      })
+    }
   }
   return Promise.reject(error)
 })
